@@ -5,7 +5,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = '唐山清鑫摄影' // page title
+const name = '金融预警处置平台' // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.

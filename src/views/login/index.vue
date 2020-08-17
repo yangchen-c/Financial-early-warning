@@ -115,31 +115,32 @@ export default {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
   methods: {
-    // handleLogin() {
-    //   this.$router.push('/banner')
-    // }
     handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid && !this.loading) {
-          this.loading = true
-          this.$store
-            .dispatch('LoginByUsername', this.loginForm)
-            .then(() => {
-              this.loading = false
-              this.$router.push({ path: this.redirect || '/' })
-            })
-            .catch((response) => {
-              this.$notify.error({
-                title: '失败',
-                message: response.data.message
-              })
-              this.loading = false
-            })
-        } else {
-          return false
-        }
-      })
+      this.$router.push('/shop')
+      console.log(123)
     }
+    // handleLogin() {
+    //   this.$refs.loginForm.validate((valid) => {
+    //     if (valid && !this.loading) {
+    //       this.loading = true
+    //       this.$store
+    //         .dispatch('LoginByUsername', this.loginForm)
+    //         .then(() => {
+    //           this.loading = false
+    //           this.$router.push({ path: this.redirect || '/' })
+    //         })
+    //         .catch((response) => {
+    //           this.$notify.error({
+    //             title: '失败',
+    //             message: response.data.message
+    //           })
+    //           this.loading = false
+    //         })
+    //     } else {
+    //       return false
+    //     }
+    //   })
+    // }
   }
 }
 </script>

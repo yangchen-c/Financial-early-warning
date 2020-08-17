@@ -69,195 +69,257 @@ export const constantRouterMap = [
       }
     ]
   },
-  // yc客户管理
+  // 网点信息
   {
-    path: '/customer',
+    path: '/outlets',
     component: Layout,
     children: [
       {
-        path: 'customer',
-        component: () => import('@/views/customer/index'),
-        name: 'customer',
+        path: 'outlets',
+        component: () => import('@/views/outlets/index'),
+        name: 'outlets',
         meta: {
           // perms: ['GET /admin/user/list'],
-          title: '客户管理',
-          icon: 'teachers'
+          title: '网点信息',
+          icon: 'local'
           // affix: true
         }
       }
     ]
   },
-  // yc门店管理
+  // 人脸识别
   {
-    path: '/shop',
+    path: '/face',
     component: Layout,
     children: [
       {
-        path: 'shop',
-        component: () => import('@/views/shop/index'),
-        name: 'shop',
+        path: 'face',
+        component: () => import('@/views/face/index'),
+        name: 'face',
         meta: {
           // perms: ['GET /admin/user/list'],
-          title: '门店管理',
-          icon: 'store'
+          title: '人脸识别',
+          icon: 'face'
           // affix: true
         }
       }
     ]
   },
-  // yc员工管理
+  // 行为分析
   {
-    path: '/staff',
+    path: '/behavior',
     component: Layout,
-    redirect: 'noredirect',
-    alwaysShow: true,
-    name: 'staff',
-    meta: {
-      title: '员工管理',
-      icon: 'user_mgt'
-    },
     children: [
       {
-        path: 'position',
-        component: () => import('@/views/staff/position'),
-        name: 'position',
+        path: 'behavior',
+        component: () => import('@/views/behavior/index'),
+        name: 'behavior',
         meta: {
           // perms: ['GET /admin/user/list'],
-          title: '职位管理',
-          icon: 'user_mgt'
-          // affix: true
-        }
-      }, {
-        path: 'stafff',
-        component: () => import('@/views/staff/stafff'),
-        name: 'stafff',
-        meta: {
-          // perms: ['GET /admin/user/list'],
-          title: '员工管理',
-          icon: 'user_mgt'
-          // affix: true
-        }
-      }, {
-        path: 'work',
-        component: () => import('@/views/staff/work'),
-        name: 'work',
-        meta: {
-          // perms: ['GET /admin/user/list'],
-          title: '考勤记录',
-          icon: 'user_mgt'
-          // affix: true
-        }
-      }, {
-        path: 'workSet',
-        component: () => import('@/views/staff/workSet'),
-        name: 'workSet',
-        meta: {
-          // perms: ['GET /admin/user/list'],
-          title: '考勤设置',
-          icon: 'user_mgt'
-          // affix: true
-        }
-      }, {
-        path: 'wages',
-        component: () => import('@/views/staff/wages'),
-        name: 'wages',
-        meta: {
-          // perms: ['GET /admin/user/list'],
-          title: '工资列表',
-          icon: 'user_mgt'
+          title: '行为分析',
+          icon: 'behavior'
           // affix: true
         }
       }
     ]
   },
-  // yc套餐管理
+  // 车辆识别
   {
-    path: '/combo',
+    path: '/car',
     component: Layout,
-    redirect: 'noredirect',
-    alwaysShow: true,
-    name: 'combo',
-    meta: {
-      title: '套餐管理',
-      icon: 'goods_type'
-    },
     children: [
       {
-        path: 'comboClassify',
-        component: () => import('@/views/combo/comboClassify'),
-        name: 'comboClassify',
+        path: 'car',
+        component: () => import('@/views/car/index'),
+        name: 'car',
         meta: {
           // perms: ['GET /admin/user/list'],
-          title: '分类管理',
-          icon: 'brand'
-          // affix: true
-        }
-      }, {
-        path: 'combos',
-        component: () => import('@/views/combo/index'),
-        name: 'combos',
-        meta: {
-          // perms: ['GET /admin/user/list'],
-          title: '套餐管理',
-          icon: 'goods_type'
+          title: '车辆识别',
+          icon: 'car'
           // affix: true
         }
       }
     ]
   },
-  // yc案例管理
+  // 疫情防控
   {
-    path: '/case',
+    path: '/prevent',
     component: Layout,
     children: [
       {
-        path: 'case',
-        component: () => import('@/views/case/index'),
-        name: 'case',
+        path: 'prevent',
+        component: () => import('@/views/prevent/index'),
+        name: 'prevent',
         meta: {
           // perms: ['GET /admin/user/list'],
-          title: '案例管理',
-          icon: 'order'
+          title: '疫情防控',
+          icon: 'heart'
           // affix: true
         }
       }
     ]
   },
-  // yc财务管理
+  // 强电管理
   {
-    path: '/balance',
+    path: '/electric',
     component: Layout,
-    redirect: 'noredirect',
-    alwaysShow: true,
-    name: 'balance',
-    meta: {
-      title: '财务管理',
-      icon: 'goods_type'
-    },
     children: [
       {
-        path: 'collect',
-        component: () => import('@/views/balance/collect'),
-        name: 'collect',
+        path: 'electric',
+        component: () => import('@/views/electric/index'),
+        name: 'electric',
         meta: {
           // perms: ['GET /admin/user/list'],
-          title: '收支列表',
-          icon: 'brand'
-          // affix: true
-        }
-      }, {
-        path: 'money',
-        component: () => import('@/views/balance/money'),
-        name: 'money',
-        meta: {
-          // perms: ['GET /admin/user/list'],
-          title: '财务统计',
-          icon: 'goods_type'
+          title: '强电管理',
+          icon: 'electric'
           // affix: true
         }
       }
     ]
   },
+  // 断电预警
+  {
+    path: '/electricN',
+    component: Layout,
+    children: [
+      {
+        path: 'electricN',
+        component: () => import('@/views/electricN/index'),
+        name: 'electricN',
+        meta: {
+          // perms: ['GET /admin/user/list'],
+          title: '断电预警',
+          icon: 'electricN'
+          // affix: true
+        }
+      }
+    ]
+  },
+  // 消防报警
+  {
+    path: '/fire',
+    component: Layout,
+    children: [
+      {
+        path: 'fire',
+        component: () => import('@/views/fire/index'),
+        name: 'fire',
+        meta: {
+          // perms: ['GET /admin/user/list'],
+          title: '消防报警',
+          icon: 'light'
+          // affix: true
+        }
+      }
+    ]
+  },
+  // 催泪装置
+  {
+    path: '/water',
+    component: Layout,
+    children: [
+      {
+        path: 'water',
+        component: () => import('@/views/water/index'),
+        name: 'water',
+        meta: {
+          // perms: ['GET /admin/user/list'],
+          title: '催泪装置',
+          icon: 'water'
+          // affix: true
+        }
+      }
+    ]
+  },
+  // 视频监控
+  {
+    path: '/video',
+    component: Layout,
+    children: [
+      {
+        path: 'video',
+        component: () => import('@/views/video/index'),
+        name: 'video',
+        meta: {
+          // perms: ['GET /admin/user/list'],
+          title: '视频监控',
+          icon: 'video'
+          // affix: true
+        }
+      }
+    ]
+  },
+  // 设备巡检
+  {
+    path: '/equipment',
+    component: Layout,
+    children: [
+      {
+        path: 'equipment',
+        component: () => import('@/views/equipment/index'),
+        name: 'equipment',
+        meta: {
+          // perms: ['GET /admin/user/list'],
+          title: '设备巡检',
+          icon: 'equipment'
+          // affix: true
+        }
+      }
+    ]
+  },
+  // 电子巡更
+  {
+    path: '/chip',
+    component: Layout,
+    children: [
+      {
+        path: 'chip',
+        component: () => import('@/views/chip/index'),
+        name: 'chip',
+        meta: {
+          // perms: ['GET /admin/user/list'],
+          title: '电子巡更',
+          icon: 'chip'
+          // affix: true
+        }
+      }
+    ]
+  },
+  // // yc财务管理electric
+  // {
+  //   path: '/balance',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   alwaysShow: true,
+  //   name: 'balance',
+  //   meta: {
+  //     title: '财务管理',
+  //     icon: 'goods_type'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'collect',
+  //       component: () => import('@/views/balance/collect'),
+  //       name: 'collect',
+  //       meta: {
+  //         // perms: ['GET /admin/user/list'],
+  //         title: '收支列表',
+  //         icon: 'brand'
+  //         // affix: true
+  //       }
+  //     }, {
+  //       path: 'money',
+  //       component: () => import('@/views/balance/money'),
+  //       name: 'money',
+  //       meta: {
+  //         // perms: ['GET /admin/user/list'],
+  //         title: '财务统计',
+  //         icon: 'goods_type'
+  //         // affix: true
+  //       }
+  //     }
+  //   ]
+  // },
   // yc end
   // {
   //   path: '/banner',

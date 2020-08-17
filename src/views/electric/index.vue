@@ -1,5 +1,5 @@
 <template>
-  <div id="app">财务统计</div>
+  <div>dian</div>
 </template>
 
 <script>

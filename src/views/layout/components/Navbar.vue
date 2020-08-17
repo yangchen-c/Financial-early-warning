@@ -1,8 +1,12 @@
 <template>
   <div class="navbar">
-    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container" />
+    <hamburger
+      :toggle-click="toggleSideBar"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+    />
 
-    <breadcrumb class="breadcrumb-container" />
+    <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
       <!-- <template v-if="device!=='mobile'">
@@ -18,11 +22,12 @@
         <el-tooltip content="通知中心" effect="dark" placement="bottom">
           <notice class="right-menu-item" />
         </el-tooltip>
-      </template> -->
+      </template>-->
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img src="@/assets/logo.png" class="user-avatar">
+          <span class="text">预警处置平台</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -40,11 +45,9 @@
             <a target="_blank" href="https://gitee.com/linlinjava/litemall">
               码云
             </a>
-          </el-dropdown-item> -->
+          </el-dropdown-item>-->
           <el-dropdown-item divided>
-            <router-link to="/profile/password">
-              密码修改
-            </router-link>
+            <router-link to="/profile/password">密码修改</router-link>
           </el-dropdown-item>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出</span>
@@ -72,12 +75,7 @@ export default {
     Notice
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'name',
-      'avatar',
-      'device'
-    ])
+    ...mapGetters(['sidebar', 'name', 'avatar', 'device'])
   },
   methods: {
     toggleSideBar() {
@@ -97,13 +95,14 @@ export default {
   height: 50px;
   line-height: 50px;
   border-radius: 0px !important;
+  background-color: #1d2027;
   .hamburger-container {
     line-height: 58px;
     height: 50px;
     float: left;
     padding: 0 10px;
   }
-  .breadcrumb-container{
+  .breadcrumb-container {
     float: left;
   }
   .errLog-container {
@@ -113,8 +112,8 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
-    &:focus{
-     outline: none;
+    &:focus {
+      outline: none;
     }
     .right-menu-item {
       display: inline-block;
@@ -131,13 +130,19 @@ export default {
         .user-avatar {
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 20px;
+          position: absolute;
+          right: 90px;
+        }
+        .text {
+          color: #fff;
         }
         .el-icon-caret-bottom {
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 20px;
           font-size: 12px;
+          color: #fff;
         }
       }
     }
