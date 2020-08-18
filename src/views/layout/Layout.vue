@@ -54,7 +54,8 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
-  background-color: #1d2027;
+  background-color: #1d1f27;
+  // background-color: #fff;
   &.mobile.openSidebar {
     position: fixed;
     top: 0;
@@ -68,5 +69,10 @@ export default {
   height: 100%;
   position: absolute;
   z-index: 999;
+}
+.sidebar-container {
+  // background-color: #17171B;
+  // padding-top: 100px;
+  background-color: #17171B !important;
 }
 </style>

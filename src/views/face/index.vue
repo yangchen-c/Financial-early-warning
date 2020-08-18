@@ -13,15 +13,22 @@
     <div class="tabs">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="预警" name="first">
+          <div class="btnOne">
+            <div class="btnTwo">
+              <el-button type="primary" size="small" round>添加</el-button>
+              <el-button type="danger" size="small" round>导出数据</el-button>
+            </div>
+          </div>
           <div class="tablee">
             <el-table :data="tableData" border style="width: 100%">
               <el-table-column align="center" type="index" label="序号" width="50" />
-              <el-table-column align="center" prop="name" label="姓名" />
-              <el-table-column align="center" prop="sex" label="性别" />
+              <el-table-column align="center" prop="name" label="姓名" width="100" />
+              <el-table-column align="center" prop="sex" label="性别" width="50" />
               <el-table-column align="center" prop="idCard" label="身份证号" />
               <el-table-column align="center" prop="address" label="籍贯" />
-              <el-table-column align="center" prop="date" label="录入时间" />
-              <el-table-column align="center" prop="photo" label="对比照片" />
+              <el-table-column align="center" prop="address" label="网点名称" />
+              <el-table-column align="center" prop="date" label="抓拍时间" />
+              <el-table-column align="center" prop="photo" label="抓拍照片" />
               <el-table-column align="center" label="操作">
                 <template slot-scope="scope">
                   <el-button
@@ -54,7 +61,84 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane label="重点人员" name="second">配置管理</el-tab-pane>
+        <el-tab-pane label="重点人员" name="second">
+          <div class="btnOne">
+            <div class="btnTwo">
+              <el-button type="primary" size="small" round @click="add1">添加</el-button>
+              <el-button type="danger" size="small" round>导出数据</el-button>
+            </div>
+          </div>
+          <div class="tablee">
+            <el-table :data="tableData" border style="width: 100%">
+              <el-table-column align="center" type="index" label="序号" width="50" />
+              <el-table-column align="center" prop="name" label="姓名" width="100" />
+              <el-table-column align="center" prop="sex" label="性别" width="50" />
+              <el-table-column align="center" prop="idCard" label="身份证号" />
+              <el-table-column align="center" prop="address" label="籍贯" />
+              <el-table-column align="center" prop="date" label="录入时间" />
+              <el-table-column align="center" prop="photo" label="对比照片" />
+              <el-table-column align="center" label="操作">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    icon="el-icon-s-order"
+                    type="primary"
+                    round
+                    @click="getEditData1(scope.row)"
+                  >修改</el-button>
+                  <el-button
+                    size="mini"
+                    icon="el-icon-delete"
+                    type="danger"
+                    round
+                    @click="delData1(scope.row)"
+                  >删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <!-- 分页----------------------------------------------- -->
+          <div class="page">
+            <el-pagination
+              :current-page="currentPage4"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="400"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
+          <!-- dialog弹出框 -->
+          <div class="dialog">
+            <el-dialog :title="title1" :visible.sync="dialogFormVisible1" width="25%">
+              <el-form :model="form">
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                  <el-input v-model="form.name" placeholder="请输入姓名" style="width:300px" />
+                </el-form-item>
+                <el-form-item label="性别" :label-width="formLabelWidth">
+                  <el-select v-model="value" clearable placeholder="选择性别" style="width:300px">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="身份证" :label-width="formLabelWidth">
+                  <el-input v-model="form.name" placeholder="请输入身份证" style="width:300px" />
+                </el-form-item>
+                <el-form-item label="籍贯" :label-width="formLabelWidth">
+                  <el-input v-model="form.name" placeholder="请输入籍贯" style="width:300px" />
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible1 = false">取 消</el-button>
+                <el-button type="primary" @click="addSubmit1">确 定</el-button>
+              </div>
+            </el-dialog>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -66,32 +150,42 @@ export default {
   data() {
     return {
       currentPage4: 1,
-      dialogFormVisible: false,
-      formLabelWidth: '120px',
+      dialogFormVisible1: false,
+      formLabelWidth: '70px',
       title1: '',
       value1: '',
+      value: '',
       activeName: 'first',
+      // 表格数据
+      optionsShop: [],
+      optionsCombo: [],
+      form: {
+        name: '',
+        classify: {
+          id: '',
+          name: '',
+          paper: ''
+        },
+        store: {
+          id: '',
+          name: ''
+        }
+      },
+      options: [
+        {
+          value: '选项1',
+          label: '男'
+        },
+        {
+          value: '选项2',
+          label: '女'
+        }
+      ],
       tableData: [
         {
           date: '2016-05-02',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄',
-          sex: '男',
-          idCard: '140821202008140089',
-          photo: '1'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          sex: '男',
-          idCard: '140821202008140089',
-          photo: '1'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
           sex: '男',
           idCard: '140821202008140089',
           photo: '1'
@@ -106,23 +200,33 @@ export default {
       console.log(tab, event)
     },
     // 新增
-    add() {
+    add1() {
       console.log('新增')
+      this.dialogFormVisible1 = true
+      this.title1 = '新增重点人员'
+    },
+    // 预警详情
+    getEditData(data) {
+      console.log('预警详情')
       this.dialogFormVisible = true
-      this.title1 = '新建网点'
+      this.title1 = '预警人员信息'
+    },
+    // 删除预警
+    delData(row) {
+      console.log('删除预警')
     },
     // 编辑
-    getEditData(data) {
+    getEditData1(data) {
       console.log('编辑')
-      this.dialogFormVisible = true
-      this.title1 = '编辑网点'
+      this.dialogFormVisible1 = true
+      this.title1 = '修改重点人员信息'
     },
     // 删除
-    delData(row) {
+    delData1(row) {
       console.log('删除')
     },
     // 编辑新增确定事件
-    addSubmit() {
+    addSubmit1() {
       console.log('编辑新增确定')
     },
     handleSizeChange(val) {
@@ -234,6 +338,12 @@ export default {
   .tabs {
     margin-top: 20 / @rem;
     color: #fff;
+  }
+  .btnOne {
+    display: flex;
+    .btnTwo {
+      margin-left: auto;
+    }
   }
   .tablee {
     margin-top: 20 / @rem;

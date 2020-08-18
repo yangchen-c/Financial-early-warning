@@ -21,6 +21,8 @@ import * as filters from './filters' // global filters
 import permission from '@/directive/permission/index.js' // 权限判断指令
 
 import Print from '@/utils/print' // 打印
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 Vue.use(Print)
 
