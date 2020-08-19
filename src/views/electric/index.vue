@@ -116,7 +116,44 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="处理记录" name="second">处理记录</el-tab-pane>
+        <el-tab-pane label="处理记录" name="second">
+          <div class="btn">
+            <el-select v-model="value" clearable placeholder="请选择网点" class="selectR">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-date-picker
+              v-model="value1"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            />
+            <el-button type="warning" round>查询</el-button>
+          </div>
+          <div class="tablee">
+            <el-table :data="tableData" border style="width: 100%">
+              <el-table-column align="center" type="index" label="序号" width="50" />
+              <el-table-column align="center" prop="name" label="网点名称" />
+              <el-table-column align="center" prop="address" label="报警类型" />
+              <el-table-column align="center" prop="date" label="报警时间" />
+            </el-table>
+          </div>
+          <div class="page">
+            <el-pagination
+              :current-page="currentPage4"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="400"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -132,6 +169,7 @@ export default {
     return {
       activeName: 'first',
       value: '',
+      value1: '',
       options: [
         {
           value: '选项1',
@@ -140,6 +178,13 @@ export default {
         {
           value: '选项2',
           label: '前台'
+        }
+      ],
+      tableData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }
       ]
     }
@@ -176,6 +221,17 @@ export default {
   padding-right: 30 / @rem;
   .tabs {
     color: #fff;
+  }
+  .tablee {
+    margin-top: 20 / @rem;
+    // margin-right: 20 / @rem;
+  }
+  .page {
+    display: flex;
+    .el-pagination {
+      margin-left: auto;
+      margin-top: 30 / @rem;
+    }
   }
   .cardOne {
     display: flex;
