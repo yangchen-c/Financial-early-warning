@@ -22,13 +22,17 @@
           <div class="tablee">
             <el-table :data="tableData" border style="width: 100%">
               <el-table-column align="center" type="index" label="序号" width="50" />
-              <el-table-column align="center" prop="name" label="姓名" width="100" />
-              <el-table-column align="center" prop="sex" label="性别" width="50" />
-              <el-table-column align="center" prop="idCard" label="身份证号" />
-              <el-table-column align="center" prop="address" label="籍贯" />
+              <el-table-column align="center" prop="faceName" label="姓名" width="100" />
+              <el-table-column align="center" prop="faceGender" label="性别" width="50" />
+              <el-table-column align="center" prop="faceIdNumber" label="身份证号" />
+              <el-table-column align="center" prop="faceHometown" label="籍贯" />
               <el-table-column align="center" prop="address" label="网点名称" />
               <el-table-column align="center" prop="date" label="抓拍时间" />
-              <el-table-column align="center" prop="photo" label="抓拍照片" />
+              <el-table-column align="center" prop="faceImage" label="抓拍照片" width="200">
+                <template slot-scope="scope">
+                  <img :src="scope.row.faceImage" alt style="width:50px;height:50px">
+                </template>
+              </el-table-column>
               <el-table-column align="center" label="操作">
                 <template slot-scope="scope">
                   <el-button
@@ -55,7 +59,7 @@
               :current-page="currentPage4"
               :page-size="10"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
@@ -103,7 +107,7 @@
               :current-page="currentPage4"
               :page-size="10"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
@@ -145,11 +149,23 @@
 </template>
 
 <script>
+import {
+  warningList,
+  warningAdd,
+  warningUpdate,
+  warningDelete
+} from '@/api/api'
 export default {
   name: 'Customer',
   data() {
     return {
+      // 分页
       currentPage4: 1,
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
       dialogFormVisible1: false,
       formLabelWidth: '70px',
       title1: '',
@@ -181,21 +197,33 @@ export default {
           label: '女'
         }
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          sex: '男',
-          idCard: '140821202008140089',
-          photo: '1'
-        }
-      ]
+      tableData: []
     }
   },
   computed: {},
-  created() {},
+  created() {
+    this.getList()
+  },
   methods: {
+    // 获取数据
+    getList() {
+      const params = {
+        page: this.listQuery.page,
+        size: this.listQuery.limit
+      }
+      const params1 = {
+        // name: this.name !== '' ? this.name : undefined
+        name: this.valueName !== '' ? this.valueName : undefined
+      }
+      warningList(params, params1)
+        .then((response) => {
+          this.tableData = response.data.data.currentList
+          this.total = response.data.data.totalRecords
+        })
+        .catch(() => {
+          this.tableData = []
+        })
+    },
     handleClick(tab, event) {
       console.log(tab, event)
     },
@@ -228,12 +256,6 @@ export default {
     // 编辑新增确定事件
     addSubmit1() {
       console.log('编辑新增确定')
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
     }
   }
 }

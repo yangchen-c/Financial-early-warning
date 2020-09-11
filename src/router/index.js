@@ -87,6 +87,24 @@ export const constantRouterMap = [
       }
     ]
   },
+  // 网点类型
+  {
+    path: '/outletsType',
+    component: Layout,
+    children: [
+      {
+        path: 'outletsType',
+        component: () => import('@/views/outletsType/index'),
+        name: 'outletsType',
+        meta: {
+          // perms: ['GET /admin/user/list'],
+          title: '网点类型',
+          icon: 'local'
+          // affix: true
+        }
+      }
+    ]
+  },
   // 人脸识别
   {
     path: '/face',

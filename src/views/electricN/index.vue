@@ -7,8 +7,8 @@
             <el-table :data="tableData" border style="width: 100%">
               <el-table-column align="center" type="index" label="序号" width="50" />
               <el-table-column align="center" prop="name" label="网点名称" />
-              <el-table-column align="center" prop="date" label="市断电时间" />
-              <el-table-column align="center" prop="date" label="市电供电正常时间" />
+              <el-table-column align="center" prop="createTime" label="市断电时间" />
+              <el-table-column align="center" prop="powerRestoreTime" label="市电供电正常时间" />
             </el-table>
           </div>
           <div class="page">
@@ -16,7 +16,7 @@
               :current-page="currentPage4"
               :page-size="10"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
@@ -38,8 +38,8 @@
             <el-table :data="tableData" border style="width: 100%">
               <el-table-column align="center" type="index" label="序号" width="50" />
               <el-table-column align="center" prop="name" label="网点名称" />
-              <el-table-column align="center" prop="date" label="市断电时间" />
-              <el-table-column align="center" prop="date" label="市电供电正常时间" />
+              <el-table-column align="center" prop="createTime" label="市断电时间" />
+              <el-table-column align="center" prop="powerRestoreTime" label="市电供电正常时间" />
             </el-table>
           </div>
           <div class="page">
@@ -47,7 +47,7 @@
               :current-page="currentPage4"
               :page-size="10"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
@@ -59,21 +59,64 @@
 </template>
 
 <script>
+import {
+  warningList,
+  warningAdd,
+  warningUpdate,
+  warningDelete
+} from '@/api/api'
+
 export default {
   data() {
     return {
+      // 分页
+      currentPage4: 1,
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
+      dialogFormVisible: false,
+      formLabelWidth: '100px',
+      title1: '',
       activeName: 'first',
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎'
-        }
-      ]
+      tableData: [],
+      value1: ''
     }
   },
+  created() {
+    this.getList()
+  },
   methods: {
+    // 获取数据
+    getList() {
+      const params = {
+        page: this.listQuery.page,
+        size: this.listQuery.limit
+      }
+      const params1 = {
+        // name: this.name !== '' ? this.name : undefined
+        name: this.valueName !== '' ? this.valueName : undefined
+      }
+      warningList(params, params1)
+        .then((response) => {
+          this.tableData = response.data.data.currentList
+          this.total = response.data.data.totalRecords
+        })
+        .catch(() => {
+          this.tableData = []
+        })
+    },
     handleClick(tab, event) {
       console.log(tab, event)
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      this.getList()
     }
   }
 }

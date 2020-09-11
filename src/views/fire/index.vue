@@ -72,15 +72,30 @@
     <div class="tablee">
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column align="center" type="index" label="序号" width="50" />
-        <el-table-column align="center" prop="lv" label="级别" />
+        <el-table-column align="center" prop="fireLevel" label="级别" />
         <el-table-column align="center" prop="cla" label="部门" />
         <el-table-column align="center" prop="name" label="网点名称" />
         <el-table-column align="center" prop="lx" label="网点类型" />
         <el-table-column align="center" prop="bw" label="报警部位" />
         <el-table-column align="center" prop="sb" label="报警设备" />
         <el-table-column align="center" prop="date" label="报警日期" />
-        <el-table-column align="center" prop="bjlx" label="报警类型" />
-        <el-table-column align="center" prop="state" label="处置状态" />
+        <el-table-column align="center" prop="state" label="报警类型">
+          <template slot-scope="scope">
+            <span v-if="scope.row.state == '1'" style="color:#67C23A">人员</span>
+            <span v-if="scope.row.state == '2'">车辆</span>
+            <span v-if="scope.row.state == '3'">警戒区域</span>
+            <span v-if="scope.row.state == '4'">行为检测</span>
+            <span v-if="scope.row.state == '5'">疫情防控</span>
+            <span v-if="scope.row.state == '6'">断电告警</span>
+            <span v-if="scope.row.state == '7'">消防告警</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="fireDisposal" label="处置状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.fireDisposal == '0'" style="color:#DC143C">未处置</span>
+            <span v-if="scope.row.fireDisposal == '1'" style="color:#67C23A">已处置</span>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="page">
@@ -88,7 +103,7 @@
         :current-page="currentPage4"
         :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -112,7 +127,7 @@
             :current-page="currentPage4"
             :page-size="10"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400"
+            :total="total"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
           />
@@ -123,9 +138,24 @@
 </template>
 
 <script>
+import {
+  warningList,
+  warningAdd,
+  warningUpdate,
+  warningDelete
+} from '@/api/api'
+
 export default {
   data() {
     return {
+      value1: '',
+      // 分页
+      currentPage4: 1,
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
       value: '',
       dialogTableVisible: false,
       options: [
@@ -138,19 +168,7 @@ export default {
           label: '2'
         }
       ],
-      tableData: [
-        {
-          lv: '一级',
-          cla: '安防',
-          state: '已处理',
-          lx: '自助银行',
-          bw: 'ATM机',
-          sb: '报警器',
-          bjlx: '火警',
-          date: '2016-05-02',
-          name: '唐山支行'
-        }
-      ],
+      tableData: [],
       gridData: [
         {
           lv: '一级',
@@ -164,6 +182,38 @@ export default {
           name: '唐山支行'
         }
       ]
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    // 获取数据
+    getList() {
+      const params = {
+        page: this.listQuery.page,
+        size: this.listQuery.limit
+      }
+      const params1 = {
+        // name: this.name !== '' ? this.name : undefined
+        name: this.valueName !== '' ? this.valueName : undefined
+      }
+      warningList(params, params1)
+        .then((response) => {
+          this.tableData = response.data.data.currentList
+          this.total = response.data.data.totalRecords
+        })
+        .catch(() => {
+          this.tableData = []
+        })
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      this.getList()
     }
   }
 }

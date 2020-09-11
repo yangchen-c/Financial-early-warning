@@ -11,263 +11,141 @@ export function uploadFile(data) {
     data
   })
 }
-// yc客户管理
-export function customerList(params, params1) {
+
+// yc网点信息
+export function branchesList(params, params1) {
   return request({
-    url: `customer/getPaging/${params.page}/${params.size}`,
+    url: `branches/getPaging/${params.page}/${params.size}`,
     method: 'get',
     params: params1
   })
 }
 
-export function customerAdd(data) {
+export function branchesList1(params) {
   return request({
-    url: 'customer',
-    method: 'post',
-    data
-  })
-}
-
-export function customerUpdate(data) {
-  return request({
-    url: 'customer',
-    method: 'put',
-    data
-  })
-}
-
-export function customerDelete(params) {
-  return request({
-    url: 'customer',
-    method: 'delete',
-    params
-  })
-}
-// yc门店管理
-export function shopList(params) {
-  return request({
-    url: 'store',
+    url: 'branches',
     method: 'get',
     params
   })
 }
 
-export function shopAdd(data) {
+export function branchesAdd(data) {
   return request({
-    url: 'store',
+    url: 'branches',
     method: 'post',
     data
   })
 }
 
-export function shopUpdate(data) {
+export function branchesUpdate(data) {
   return request({
-    url: 'store',
+    url: 'branches',
     method: 'put',
     data
   })
 }
 
-export function shopDelete(params) {
+export function branchesDelete(params) {
   return request({
-    url: 'store',
+    url: 'branches',
     method: 'delete',
     params
   })
 }
-// yc分类管理
-export function comboClassifyList(params) {
+// yc网点类型信息
+export function branchesTypeList(params) {
   return request({
-    url: 'comboClassify',
+    // url: 'case',
+    url: 'branchesType',
     method: 'get',
     params
   })
 }
-export function comboClassifyAdd(data) {
+export function branchesTypeAdd(data) {
   return request({
-    url: 'comboClassify',
+    url: 'branchesType',
     method: 'post',
     data
   })
 }
 
-export function comboClassifyUpdate(data) {
+export function branchesTypeUpdate(data) {
   return request({
-    url: 'comboClassify',
+    url: 'branchesType',
     method: 'put',
     data
   })
 }
 
-export function comboClassifyDelete(params) {
+export function branchesTypeDelete(params) {
   return request({
-    url: 'comboClassify',
+    url: 'branchesType',
     method: 'delete',
     params
   })
 }
 
-// yc套餐管理
-export function comboList(params) {
+// yc设备
+export function deviceList(params, params1) {
   return request({
-    url: 'combo',
+    url: `device/getPaging/${params.page}/${params.size}`,
     method: 'get',
-    params
+    params: params1
   })
 }
-export function comboAdd(data) {
+export function deviceAdd(data) {
   return request({
-    url: 'combo',
+    url: 'device',
     method: 'post',
     data
   })
 }
 
-export function comboUpdate(data) {
+export function deviceUpdate(data) {
   return request({
-    url: 'combo',
+    url: 'device',
     method: 'put',
     data
   })
 }
 
-export function comboDelete(params) {
+export function deviceDelete(params) {
   return request({
-    url: 'combo',
+    url: 'device',
     method: 'delete',
     params
   })
 }
-// yc案例管理
-export function caseList(params) {
+
+// yc报警
+export function warningList(params, params1) {
   return request({
-    url: 'case',
+    url: `warning/getPaging/${params.page}/${params.size}`,
     method: 'get',
-    params
+    params: params1
   })
 }
-export function caseAdd(data) {
+export function warningAdd(data) {
   return request({
-    url: 'case',
+    url: 'warning',
     method: 'post',
     data
   })
 }
 
-export function caseUpdate(data) {
+export function warningUpdate(data) {
   return request({
-    url: 'case',
+    url: 'warning',
     method: 'put',
     data
   })
 }
 
-export function caseDelete(params) {
+export function warningDelete(params) {
   return request({
-    url: 'case',
-    method: 'delete',
-    params
-  })
-}
-// yc职位管理
-export function positionList(params) {
-  return request({
-    url: 'position',
-    method: 'get',
-    params
-  })
-}
-export function positionAdd(data) {
-  return request({
-    url: 'position',
-    method: 'post',
-    data
-  })
-}
-
-export function positionUpdate(data) {
-  return request({
-    url: 'position',
-    method: 'put',
-    data
-  })
-}
-
-export function positionDelete(params) {
-  return request({
-    url: 'position',
-    method: 'delete',
-    params
-  })
-}
-// yc考勤管理
-export function workList(params) {
-  return request({
-    url: 'attendance',
-    method: 'get',
-    params
-  })
-}
-// yc员工管理
-export function staffList(params) {
-  return request({
-    url: 'staff',
-    method: 'get',
-    params
-  })
-}
-export function staffAdd(data) {
-  return request({
-    url: 'staff',
-    method: 'post',
-    data
-  })
-}
-
-export function staffUpdate(data) {
-  return request({
-    url: 'staff',
-    method: 'put',
-    data
-  })
-}
-
-export function staffDelete(params) {
-  return request({
-    url: 'staff',
+    url: 'warning',
     method: 'delete',
     params
   })
 }
 
-// yc收支列表
-export function balanceList(params) {
-  return request({
-    url: 'balance',
-    method: 'get',
-    params
-  })
-}
-export function balanceAdd(data) {
-  return request({
-    url: 'balance',
-    method: 'post',
-    data
-  })
-}
-
-export function balanceUpdate(data) {
-  return request({
-    url: 'balance',
-    method: 'put',
-    data
-  })
-}
-
-export function balanceDelete(params) {
-  return request({
-    url: 'balance',
-    method: 'delete',
-    params
-  })
-}

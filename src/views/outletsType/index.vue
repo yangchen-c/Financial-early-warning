@@ -1,29 +1,12 @@
 <template>
   <div id="app">
     <div class="btn">
-      <el-input
-        v-model="valueName"
-        prefix-icon="el-icon-search"
-        placeholder="搜索网点名称"
-        clearable
-        style="width:230px;"
-        class="inputR"
-      />
-      <el-select v-model="value" clearable placeholder="请选择网点类型" class="selectR">
-        <el-option v-for="item in optionsType" :key="item.id" :label="item.name" :value="item.id" />
-      </el-select>
-      <el-button type="warning" round @click="getList()">查询</el-button>
-      <el-button type="primary" size="small" round style="margin-left:850px" @click="add">新建</el-button>
-      <el-button type="primary" size="small" round>导入数据</el-button>
-      <el-button type="primary" size="small" round @click="handleDownload">导出数据</el-button>
+      <el-button type="primary" size="small" round @click="add">新建</el-button>
     </div>
     <div class="tablee">
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column align="center" type="index" label="序号" width="50" />
-        <el-table-column align="center" prop="name" label="网点名称" />
-        <el-table-column align="center" prop="director" label="主管单位" />
-        <el-table-column align="center" prop="type.name" label="网点类型" />
-        <el-table-column align="center" prop="createTime" label="添加时间" />
+        <el-table-column align="center" prop="name" label="网点类型" />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
@@ -48,31 +31,8 @@
     <div class="dialog">
       <el-dialog :title="title1" :visible.sync="dialogFormVisible" width="33%">
         <el-form :model="form">
-          <el-form-item label="网点名称" :label-width="formLabelWidth">
-            <el-input v-model="form.name" placeholder="请输入网点名称" style="width:400px" />
-          </el-form-item>
-          <el-form-item label="主管单位" :label-width="formLabelWidth">
-            <el-input v-model="form.director" placeholder="请输入主管单位" style="width:400px" />
-          </el-form-item>
-          <!-- <el-form-item label="所属上级" :label-width="formLabelWidth">
-            <el-select v-model="form.store.id" clearable placeholder="选择所属上级" style="width:400px">
-              <el-option
-                v-for="item in optionsShop"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>-->
           <el-form-item label="网点类型" :label-width="formLabelWidth">
-            <el-select v-model="form.type.id" clearable placeholder="选择网点类型" style="width:400px">
-              <el-option
-                v-for="item in optionsType"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
+            <el-input v-model="form.name" placeholder="请输入网点类型" style="width:400px" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -81,124 +41,57 @@
         </div>
       </el-dialog>
     </div>
-
-    <div class="page">
-      <!-- 分页 -->
-      <el-pagination
-        :current-page="currentPage4"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-      <!-- <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList"
-      />-->
-    </div>
   </div>
 </template>
 
 <script>
 import {
   branchesTypeList,
-  branchesList,
-  branchesAdd,
-  branchesUpdate,
-  branchesDelete
+  branchesTypeAdd,
+  branchesTypeUpdate,
+  branchesTypeDelete
 } from '@/api/api'
-
 export default {
-  name: 'Branches',
-
-  // components: { Pagination },
+  name: 'OutletsType',
   data() {
     return {
-      // 分页
-      currentPage4: 1,
-      total: 0,
-      listQuery: {
-        page: 1,
-        limit: 10
-      },
       dialogFormVisible: false,
-      formLabelWidth: '100px',
       title1: '',
-      // 表单数据
-      // optionsShop: [],
-      optionsType: [], // 网点类型
+      formLabelWidth: '100px',
+      tableData: [], // 表格数据
       form: {
         id: '',
-        name: '',
-        director: '',
-        type: {
-          id: '',
-          name: ''
-        }
-      },
-      value: '',
-      valueName: '',
-      input: '',
-      tableData: [] // 表格数据
+        name: ''
+      }
     }
   },
   created() {
     this.getList()
-    this.getTypeList()
   },
   methods: {
-    // 获取数据
+    // 获取网点类型数据
     getList() {
-      const params = {
-        page: this.listQuery.page,
-        size: this.listQuery.limit
-      }
-      const params1 = {
-        // name: this.name !== '' ? this.name : undefined
-        name: this.valueName !== '' ? this.valueName : undefined
-      }
-      branchesList(params, params1)
+      branchesTypeList()
         .then((response) => {
-          this.tableData = response.data.data.currentList
-          this.total = response.data.data.totalRecords
+          this.tableData = response.data.data
         })
         .catch(() => {
           this.tableData = []
         })
     },
-    // 获取网点类型数据
-    getTypeList() {
-      branchesTypeList()
-        .then((response) => {
-          this.optionsType = response.data.data
-        })
-        .catch(() => {
-          this.optionsType = []
-        })
-    },
     // 新增
     add() {
       this.dialogFormVisible = true
-      this.title1 = '新建网点类型'
+      this.title1 = '新建网点'
       this.form.id = ''
       this.form.name = ''
-      this.form.director = ''
-      this.form.type.id = ''
-      this.form.type.name = ''
     },
     // 编辑
     getEditData(data) {
       this.dialogFormVisible = true
-      this.title1 = '编辑网点类型'
+      this.title1 = '编辑网点'
       this.form.id = data.id
       this.form.name = data.name
-      this.form.director = data.director
-      this.form.type.id = data.type.id
-      this.form.type.name = data.type.name
     },
     // 删除
     delData(row) {
@@ -211,7 +104,7 @@ export default {
           const params = {
             id: row.id
           }
-          branchesDelete(params)
+          branchesTypeDelete(params)
             .then((response) => {
               this.$notify.success({
                 title: '成功',
@@ -237,7 +130,7 @@ export default {
     addSubmit() {
       console.log('编辑新增确定')
       if (this.form.id) {
-        branchesUpdate(this.form)
+        branchesTypeUpdate(this.form)
           .then(() => {
             this.$notify.success({
               title: '成功',
@@ -253,7 +146,7 @@ export default {
             })
           })
       } else {
-        branchesAdd(this.form)
+        branchesTypeAdd(this.form)
           .then(() => {
             this.$notify.success({
               title: '成功',
@@ -269,39 +162,6 @@ export default {
             })
           })
       }
-    },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
-    },
-    // 导出表格
-    handleDownload() {
-      //   this.downloadLoading = true
-      import('@/vendor/Export2Excel').then((excel) => {
-        const tHeader = [
-          'ID',
-          '网点名称',
-          '网点类型',
-          '添加时间'
-        ]
-        const filterVal = [
-          'id',
-          'name',
-          'type.name',
-          'createTime'
-        ]
-        excel.export_json_to_excel2(
-          tHeader,
-          this.tableData,
-          filterVal,
-          '网点信息'
-        )
-        this.downloadLoading = false
-      })
     }
   }
 }
@@ -376,18 +236,6 @@ export default {
   }
 }
 
-// 分页样式----------------------------------------------
-.page {
-  .el-pagination__total {
-    color: #ffffff;
-  }
-  .el-input__inner {
-    background-color: #fff;
-  }
-  .el-pagination__jump {
-    color: #ffffff;
-  }
-}
 </style>
 
 <style lang="less" scoped>
@@ -402,14 +250,6 @@ export default {
   padding-right: 30 / @rem;
   .tablee {
     margin-top: 20 / @rem;
-    // margin-right: 20 / @rem;
-  }
-  .page {
-    display: flex;
-    .el-pagination {
-      margin-left: auto;
-      margin-top: 30 / @rem;
-    }
   }
 }
 </style>

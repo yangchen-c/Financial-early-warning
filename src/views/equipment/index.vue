@@ -20,7 +20,8 @@
                 :value="item.value"
               />
             </el-select>
-            <el-button type="warning" round>查询</el-button>
+            <!-- <el-button type="warning" round>查询</el-button> -->
+            <el-button type="warning" round @click="add">新增</el-button>
             <el-button type="primary" round style="margin-left:800px">打印</el-button>
             <el-button type="danger" round>导出Excel</el-button>
             <el-button type="danger" round>导出HTML</el-button>
@@ -28,22 +29,88 @@
           <div class="tablee">
             <el-table :data="tableData" border style="width: 100%">
               <el-table-column align="center" type="index" label="序号" width="50" />
-              <el-table-column align="center" prop="name" label="网点名称" />
+              <el-table-column align="center" prop="branches.name" label="网点名称" />
               <el-table-column align="center" prop="name" label="设备名称" />
-              <el-table-column align="center" prop="name" label="设备IP" />
-              <el-table-column align="center" prop="address" label="安装部位" />
-              <el-table-column align="center" prop="num" label="主机状态" />
-              <el-table-column align="center" prop="num" label="更新时间" />
-              <el-table-column align="center" prop="num" label="在线状态" />
-              <el-table-column align="center" prop="num" label="检查" />
+              <el-table-column align="center" prop="number" label="设备IP" />
+              <el-table-column align="center" prop="parts" label="安装部位" />
+              <el-table-column align="center" prop="state" label="主机状态">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.state == '0'" style="color:#67C23A">正常</span>
+                  <span v-if="scope.row.state == '1'" style="color:#4B0082">异常</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" prop="createTime" label="更新时间" />
+              <el-table-column align="center" prop="state" label="在线状态">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.state == '0'" style="color:#67C23A">在线</span>
+                  <span v-if="scope.row.state == '1'" style="color:#4B0082">不在线</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" prop="state" label="检查">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.state == '0'" style="color:#67C23A">检查</span>
+                  <span v-if="scope.row.state == '1'" style="color:#4B0082">故障</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="操作" width="200">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    icon="el-icon-edit"
+                    type="primary"
+                    round
+                    @click="getEditData(scope.row)"
+                  >修改</el-button>
+                  <el-button
+                    size="mini"
+                    icon="el-icon-delete"
+                    type="danger"
+                    round
+                    @click="delData(scope.row)"
+                  >删除</el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </div>
+          <!-- dialog弹出框 -->
+          <div class="dialog">
+            <el-dialog :title="title1" :visible.sync="dialogFormVisible" width="33%">
+              <el-form :model="form">
+                <el-form-item label="网点名称" :label-width="formLabelWidth">
+                  <el-select
+                    v-model="form.branches.id"
+                    clearable
+                    placeholder="选择网点"
+                    style="width:400px"
+                  >
+                    <el-option
+                      v-for="item in optionsType"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="设备名称" :label-width="formLabelWidth">
+                  <el-input v-model="form.name" placeholder="请输入网点名称" style="width:400px" />
+                </el-form-item>
+                <el-form-item label="设备IP" :label-width="formLabelWidth">
+                  <el-input v-model="form.director" placeholder="请输入主管单位" style="width:400px" />
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addSubmit">确 定</el-button>
+              </div>
+            </el-dialog>
+          </div>
+          <!-- 分页 -->
           <div class="page">
             <el-pagination
               :current-page="currentPage4"
               :page-size="10"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
@@ -90,7 +157,7 @@
               :current-page="currentPage4"
               :page-size="10"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
@@ -102,10 +169,37 @@
 </template>
 
 <script>
+import {
+  deviceList,
+  branchesList1,
+  deviceAdd,
+  deviceUpdate,
+  deviceDelete
+} from '@/api/api'
 export default {
   data() {
     return {
+      form: {
+        id: '',
+        name: '',
+        director: '',
+        branches: {
+          id: '',
+          name: ''
+        }
+      },
+      // 分页
+      currentPage4: 1,
+      total: 0,
+      title1: '',
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
+      dialogFormVisible: false,
+      formLabelWidth: '100px',
       activeName: 'first',
+      optionsType: [], // 网点
       options: [
         {
           value: '选项1',
@@ -117,19 +211,143 @@ export default {
         }
       ],
       value: '',
-      tableData: [
-        {
-          num: '20',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          data: '2020-08-19'
-        }
-      ]
+      tableData: []
     }
+  },
+  created() {
+    this.getList()
+    this.getBranchesList()
   },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event)
+    },
+    // 获取数据
+    getList() {
+      const params = {
+        page: this.listQuery.page,
+        size: this.listQuery.limit
+      }
+      const params1 = {
+        // name: this.name !== '' ? this.name : undefined
+        name: this.valueName !== '' ? this.valueName : undefined
+      }
+      deviceList(params, params1)
+        .then((response) => {
+          this.tableData = response.data.data.currentList
+          this.total = response.data.data.totalRecords
+        })
+        .catch(() => {
+          this.tableData = []
+        })
+    },
+    // 获取网点数据
+    getBranchesList() {
+      branchesList1()
+        .then((response) => {
+          this.optionsType = response.data.data
+        })
+        .catch(() => {
+          this.optionsType = []
+        })
+    },
+    // 新增
+    add() {
+      this.dialogFormVisible = true
+      this.title1 = '新建设备'
+      this.form.id = ''
+      this.form.name = ''
+      this.form.director = ''
+      this.form.branches.id = ''
+      this.form.branches.name = ''
+    },
+    // 编辑
+    getEditData(data) {
+      this.dialogFormVisible = true
+      this.title1 = '编辑设备'
+      this.form.id = data.id
+      this.form.name = data.name
+      this.form.director = data.director
+      this.form.branches.id = data.branches.id
+      this.form.branches.name = data.branches.name
+    },
+    // 删除
+    delData(row) {
+      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          const params = {
+            id: row.id
+          }
+          deviceDelete(params)
+            .then((response) => {
+              this.$notify.success({
+                title: '成功',
+                message: '记录删除成功'
+              })
+              this.getList()
+            })
+            .catch((response) => {
+              this.$notify.error({
+                title: '失败',
+                message: response.data.message
+              })
+            })
+        })
+        .catch(() => {
+          this.$notify.error({
+            title: '取消',
+            message: '已取消删除'
+          })
+        })
+    },
+    // 编辑新增确定事件
+    addSubmit() {
+      console.log('编辑新增确定')
+      if (this.form.id) {
+        deviceUpdate(this.form)
+          .then(() => {
+            this.$notify.success({
+              title: '成功',
+              message: '记录修改成功'
+            })
+            this.dialogFormVisible = false
+            this.getList()
+          })
+          .catch((response) => {
+            this.$notify.error({
+              title: '失败',
+              message: response.data.message
+            })
+          })
+      } else {
+        deviceAdd(this.form)
+          .then(() => {
+            this.$notify.success({
+              title: '成功',
+              message: '记录添加成功'
+            })
+            this.dialogFormVisible = false
+            this.getList()
+          })
+          .catch((response) => {
+            this.$notify.error({
+              title: '失败',
+              message: response.data.message
+            })
+          })
+      }
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      this.getList()
     }
   }
 }
